@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useIvaStore } from '@/lib/iva/store';
 import { t } from '@/lib/iva/i18n';
 import {
   Radio, Circle, CircleDot, Globe, FileText,
   Shield, Brain, Compass
 } from 'lucide-react';
+import AgentDetailModal from './agent-detail-modal';
+import { Agent } from '@/lib/iva/types';
 
 const iconMap: Record<string, typeof Radio> = {
   Radio, Circle, CircleDot, Globe, FileText,
@@ -14,6 +17,7 @@ const iconMap: Record<string, typeof Radio> = {
 
 export default function AgentsView() {
   const { locale, agents } = useIvaStore();
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
 
   return (
     <div className="agents-view">
@@ -22,15 +26,20 @@ export default function AgentsView() {
       <div className="agents-grid">
         {agents.map((agent) => {
           const Icon = iconMap[agent.icon] || Circle;
-          const statusColor = agent.status === 'online' ? 'var(--color-online, #3ACA3A)' :
-                             agent.status === 'processing' ? 'var(--gold-primary)' :
-                             'var(--text-muted)';
+          const statusColor = agent.status === 'online' ? '#3ACA3A' :
+                             agent.status === 'processing' ? '#C8A040' :
+                             '#5A5040';
           const statusText = agent.status === 'online' ? t(locale, 'online') :
                             agent.status === 'processing' ? t(locale, 'processing') :
                             t(locale, 'offline');
 
           return (
-            <div key={agent.id} className="agent-card">
+            <div
+              key={agent.id}
+              className="agent-card"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setSelectedAgent(agent)}
+            >
               <div className="agent-header">
                 <div className="agent-icon">
                   <Icon size={20} />
@@ -63,6 +72,8 @@ export default function AgentsView() {
           );
         })}
       </div>
+
+      <AgentDetailModal agent={selectedAgent} onClose={() => setSelectedAgent(null)} />
     </div>
   );
 }
