@@ -8,3 +8,9 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: DATABASE_PATH
+        value: /var/data/iva.db
+    disk:
+      name: ivadata
+      mountPath: /var/data
+      sizeGB: 1
