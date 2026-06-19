@@ -1963,25 +1963,6 @@
   border-color: var(--border-gold-act);
 }
 
-.locale-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: var(--space-1);
-  background: var(--bg-modal);
-  border: 1px solid var(--border-gold-mid);
-  border-radius: var(--radius-md);
-  padding: var(--space-1);
-  z-index: 100;
-  min-width: 60px;
-}
-
-.locale-dropdown:hover .locale-menu {
-  display: flex;
-  flex-direction: column;
-}
-
 .locale-menu-item {
   padding: 0.4rem 0.8rem;
   background: transparent;
@@ -2634,6 +2615,52 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.iva-show-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  background: transparent;
+  border: 1px dashed var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+.iva-show-more:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.iva-logo-emblem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.locale-menu-open {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-1);
+  background: var(--bg-modal);
+  border: 1px solid var(--border-gold-mid);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  z-index: 1000;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
 .iva-agents-strip {

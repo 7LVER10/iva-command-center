@@ -97,6 +97,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     stripModels: 'MODELS',
     confirm: 'Confirm',
     cancel: 'Cancel',
+    showMore: 'Show more',
+    showLess: 'Show less',
   },
   ru: {
     commandCenter: 'КОМАНДНЫЙ ЦЕНТР',
@@ -194,6 +196,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     stripModels: 'МОДЕЛЕЙ',
     confirm: 'Подтвердить',
     cancel: 'Отмена',
+    showMore: 'Показать ещё',
+    showLess: 'Скрыть',
   },
   de: {
     commandCenter: 'KOMMANDOZENTRALE',
@@ -291,6 +295,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     stripModels: 'MODELLE',
     confirm: 'Bestätigen',
     cancel: 'Abbrechen',
+    showMore: 'Mehr anzeigen',
+    showLess: 'Weniger anzeigen',
   },
   tr: {
     commandCenter: 'KOMUTA MERKEZİ',
@@ -388,6 +394,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     stripModels: 'MODELLER',
     confirm: 'Onayla',
     cancel: 'İptal',
+    showMore: 'Daha fazla göster',
+    showLess: 'Daha az göster',
   },
 };
 

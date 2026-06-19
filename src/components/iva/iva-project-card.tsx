@@ -13,20 +13,19 @@ interface IvaProjectCardProps {
   project: Project;
 }
 
-const companies = [
-  'ООО «Донстрой Инвест»', 'АО «ЛенСпецСМУ»', 'ООО «Альфа-Строй»',
-  'ПАО «Газпром»', 'ООО «Роснано»', 'АО «Ростех»',
-  'ООО «СтройГрупп»', 'АО «ТехноПром»', 'ООО «ИнвестПроект»',
-  'АО «ЕвроСтрой»', 'ООО «НовоДевелопмент»', 'АО «ПромСвязьСтрой»',
-  'ООО «ЭнергоСтрой»', 'АО «МеталлКонструкция»', 'ООО «СтеклоПром»',
-];
+const companiesByLocale: Record<string, string[]> = {
+  ru: ['ООО «Донстрой Инвест»', 'АО «ЛенСпецСМУ»', 'ООО «Альфа-Строй»', 'ПАО «Газпром»', 'ООО «Роснано»', 'АО «Ростех»', 'ООО «СтройГрупп»', 'АО «ТехноПром»', 'ООО «ИнвестПроект»', 'АО «ЕвроСтрой»', 'ООО «НовоДевелопмент»', 'АО «ПромСвязьСтрой»', 'ООО «ЭнергоСтрой»', 'АО «МеталлКонструкция»', 'ООО «СтеклоПром»'],
+  en: ['Donstroy Invest LLC', 'LenSpecSMU JSC', 'Alpha-Stroy LLC', 'Gazprom PJSC', 'Rusnano LLC', 'Rostec JSC', 'StroyGroup LLC', 'TechnoProm JSC', 'InvestProject LLC', 'EuroStroy JSC', 'NovoDevelopment LLC', 'PromSvyazStroy JSC', 'EnergoStroy LLC', 'MetalKonstruktsiya JSC', 'StekloProm LLC'],
+  de: ['Donstroy Invest GmbH', 'LenSpecSMU AG', 'Alpha-Bau GmbH', 'Gazprom PJSC', 'Rusnano LLC', 'Rostec AG', 'StroyGroup GmbH', 'TechnoProm AG', 'InvestProject GmbH', 'EuroStroy AG', 'NovoDevelopment GmbH', 'PromSvyazStroy AG', 'EnergoStroy GmbH', 'MetalKonstruktsiya AG', 'StekloProm GmbH'],
+  tr: ['Donstroy İnşaat Ltd.', 'LenSpecSMU A.Ş.', 'Alfa-İnşaat Ltd.', 'Gazprom A.Ş.', 'Rusnano Ltd.', 'Rostec A.Ş.', 'StroyGroup Ltd.', 'TechnoProm A.Ş.', 'InvestProject Ltd.', 'EuroStroy A.Ş.', 'NovoDevelopment Ltd.', 'PromSvyazStroy A.Ş.', 'EnergoStroy Ltd.', 'MetalKonstruktsiya A.Ş.', 'StekloProm Ltd.'],
+};
 
-const clients = [
-  'Департамент строительства', 'Министерство инфраструктуры',
-  'Корпорация развития', 'Инвестфонд «Восток»', 'Группа компаний «Альфа»',
-  'Холдинг «Евразия»', 'Фонд прямых инвестиций', 'Частный инвестор',
-  'Государственная корпорация', 'Международный партнёр',
-];
+const clientsByLocale: Record<string, string[]> = {
+  ru: ['Департамент строительства', 'Министерство инфраструктуры', 'Корпорация развития', 'Инвестфонд «Восток»', 'Группа компаний «Альфа»', 'Холдинг «Евразия»', 'Фонд прямых инвестиций', 'Частный инвестор', 'Государственная корпорация', 'Международный партнёр'],
+  en: ['Department of Construction', 'Ministry of Infrastructure', 'Development Corporation', 'Eastern Investment Fund', 'Alpha Group', 'Eurasia Holdings', 'Direct Investment Fund', 'Private Investor', 'State Corporation', 'International Partner'],
+  de: ['Baudepartement', 'Ministerium für Infrastruktur', 'Entwicklungskorporation', 'Ost-Investitionsfonds', 'Alpha-Gruppe', 'Eurasia-Holdings', 'Direktinvestitionsfonds', 'Privatinvestor', 'Staatliche Korporation', 'Internationaler Partner'],
+  tr: ['İnşaat Dairesi', 'Altyapı Bakanlığı', 'Kalkınma Şirketi', 'Doğu Yatırım Fonu', 'Alfa Grubu', 'Avrasya Holding', 'Doğrudan Yatırım Fonu', 'Özel Yatırımcı', 'Devlet Şirketi', 'Uluslararası Ortağı'],
+};
 
 const deadlines = ['Q1 2027', 'Q2 2027', 'Q3 2027', 'Q4 2027', 'H1 2028', 'H2 2028'];
 
@@ -39,6 +38,8 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
   const riskScore = Math.round((1 - p.relevance) * 100);
   const marginScore = Math.round(p.relevance * 85 + (p.id % 15));
 
+  const companies = companiesByLocale[locale] || companiesByLocale.en;
+  const clients = clientsByLocale[locale] || clientsByLocale.en;
   const company = companies[p.id % companies.length];
   const client = clients[p.id % clients.length];
   const deadline = deadlines[p.id % deadlines.length];
@@ -84,7 +85,6 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
 
   return (
     <div className="iva-project-card">
-      {/* Card Header */}
       <div className="iva-card-header">
         <div className="iva-card-id">
           <span className="iva-card-id-icon">◈</span>
@@ -95,10 +95,8 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
         </span>
       </div>
 
-      {/* Title */}
       <h3 className="iva-card-title">{p.name}</h3>
 
-      {/* Meta Row */}
       <div className="iva-card-meta">
         <span className="iva-meta-item">
           <Building2 size={13} />
@@ -118,7 +116,6 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
         </span>
       </div>
 
-      {/* Client Row */}
       <div className="iva-card-meta">
         <span className="iva-meta-item">
           <User size={13} />
@@ -130,7 +127,6 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
         </span>
       </div>
 
-      {/* Score Bars */}
       <div className="iva-scores">
         <div className="iva-score-row">
           <span className="iva-score-label">{t(locale, 'relevance')}</span>
@@ -157,7 +153,6 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
         </div>
       </div>
 
-      {/* AI Analysis Expandable */}
       <div className="iva-ai-section">
         <button className="iva-ai-toggle" onClick={() => setExpanded(!expanded)}>
           <Sparkles size={14} />
@@ -210,7 +205,6 @@ export default function IvaProjectCard({ project }: IvaProjectCardProps) {
         )}
       </div>
 
-      {/* Action Buttons */}
       <div className="iva-card-actions">
         <button className="iva-btn-approve" onClick={handleApprove}>
           <CheckCircle size={14} />
