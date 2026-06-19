@@ -1,6 +1,10 @@
 import { create } from 'zustand';
-import { IvaState, ProjectStatus, Agent } from './types';
+import { IvaState, ProjectStatus, Agent, Project } from './types';
 import { agents as defaultAgents } from './constants';
+import { EnrichedProject, ExportFormat } from './vnext-types';
+import { runAgentStack } from './agent-engine';
+import { generateExport, downloadExport, copyToClipboard } from './export-engine';
+import { getHistory, addHistoryEntry } from './history-engine';
 
 const STORAGE_KEY = 'iva-state';
 
@@ -63,6 +67,10 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   showRelevanceModal: false,
   showMarginModal: false,
   selectedFilter: 'all',
+  enrichedProjects: [],
+  analysisHistory: [],
+  competitorMode: false,
+  selectedExportFormat: 'brief' as ExportFormat,
 
   setLocale: (locale) => {
     set({ locale });
@@ -85,6 +93,8 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   setShowRelevanceModal: (show) => set({ showRelevanceModal: show }),
   setShowMarginModal: (show) => set({ showMarginModal: show }),
   setSelectedFilter: (filter) => set({ selectedFilter: filter }),
+  setCompetitorMode: (mode) => set({ competitorMode: mode }),
+  setSelectedExportFormat: (format) => set({ selectedExportFormat: format }),
 
   showConfirmDialogFn: (data) => set({ showConfirmDialog: true, confirmDialogData: data }),
   hideConfirmDialog: () => set({ showConfirmDialog: false, confirmDialogData: null }),
@@ -117,7 +127,7 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   },
 
   runAnalysis: async () => {
-    const { searchQuery, countryFilter, nicheFilter, groupFilter, statusFilter } = get();
+    const { searchQuery, countryFilter, nicheFilter, groupFilter, statusFilter, locale } = get();
     set({ analysisStatus: 'loading', analysisResult: null });
     try {
       const res = await fetch('/api/analysis', {
@@ -132,13 +142,35 @@ export const useIvaStore = create<IvaState>((set, get) => ({
         }),
       });
       const data = await res.json();
-      set({ analysisStatus: 'success', analysisResult: data });
+
+      const enriched: EnrichedProject[] = data.items.map((project: Project) => {
+        const agentResult = runAgentStack(project, locale);
+        return {
+          ...project,
+          ...agentResult,
+        };
+      });
+
+      set({ analysisStatus: 'success', analysisResult: data, enrichedProjects: enriched });
+
+      addHistoryEntry({
+        geo: countryFilter,
+        niche: nicheFilter,
+        query: searchQuery,
+        result_count: data.items.length,
+        avg_opportunity: enriched.length > 0 ? Math.round(enriched.reduce((a, e) => a + (e.scores?.opportunity?.value || 0), 0) / enriched.length) : 0,
+        avg_risk: enriched.length > 0 ? Math.round(enriched.reduce((a, e) => a + (e.scores?.risk?.value || 0), 0) / enriched.length) : 0,
+        avg_margin: enriched.length > 0 ? Math.round(enriched.reduce((a, e) => a + (e.scores?.margin?.value || 0), 0) / enriched.length) : 0,
+        top_project_id: enriched[0]?.id || 0,
+      });
+
+      set({ analysisHistory: getHistory() });
     } catch {
       set({ analysisStatus: 'error' });
     }
   },
 
-  resetAnalysis: () => set({ analysisStatus: 'idle', analysisResult: null }),
+  resetAnalysis: () => set({ analysisStatus: 'idle', analysisResult: null, enrichedProjects: [] }),
 
   updateProjectStatus: async (id: number, status: ProjectStatus) => {
     await fetch(`/api/projects/${id}`, {
@@ -200,5 +232,23 @@ export const useIvaStore = create<IvaState>((set, get) => ({
     a.click();
     URL.revokeObjectURL(url);
     get().addToast({ type: 'success', message: 'Project exported' });
+  },
+
+  exportEnriched: (project, format) => {
+    const { locale } = get();
+    const payload = generateExport(project, format, locale);
+    downloadExport(payload, project.name.replace(/\s+/g, '-').toLowerCase());
+    get().addToast({ type: 'success', message: `Exported as ${format}` });
+  },
+
+  copyExport: async (project, format) => {
+    const { locale } = get();
+    const payload = generateExport(project, format, locale);
+    await copyToClipboard(payload.content);
+    get().addToast({ type: 'success', message: 'Copied to clipboard' });
+  },
+
+  loadHistory: () => {
+    set({ analysisHistory: getHistory() });
   },
 }));

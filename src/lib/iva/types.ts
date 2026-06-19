@@ -1,3 +1,5 @@
+import { EnrichedProject, AnalysisHistoryEntry, ExportFormat } from './vnext-types';
+
 export type Locale = 'en' | 'ru' | 'de' | 'tr';
 export type Theme = 'gold' | 'ocean' | 'forest';
 export type Priority = 'high' | 'medium' | 'low';
@@ -92,6 +94,10 @@ export interface IvaState {
   showRelevanceModal: boolean;
   showMarginModal: boolean;
   selectedFilter: string;
+  enrichedProjects: EnrichedProject[];
+  analysisHistory: AnalysisHistoryEntry[];
+  competitorMode: boolean;
+  selectedExportFormat: ExportFormat;
   setLocale: (locale: Locale) => void;
   setTheme: (theme: Theme) => void;
   setNavSection: (section: NavSection) => void;
@@ -107,6 +113,8 @@ export interface IvaState {
   setShowRelevanceModal: (show: boolean) => void;
   setShowMarginModal: (show: boolean) => void;
   setSelectedFilter: (filter: string) => void;
+  setCompetitorMode: (mode: boolean) => void;
+  setSelectedExportFormat: (format: ExportFormat) => void;
   showConfirmDialogFn: (data: ConfirmDialogData) => void;
   hideConfirmDialog: () => void;
   addToast: (toast: Toast) => void;
@@ -118,5 +126,8 @@ export interface IvaState {
   createProject: (data: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => Promise<boolean>;
   updateProject: (id: number, data: Partial<Project>) => Promise<void>;
   exportProject: (project: Project) => void;
+  exportEnriched: (project: EnrichedProject, format: ExportFormat) => void;
+  copyExport: (project: EnrichedProject, format: ExportFormat) => Promise<void>;
+  loadHistory: () => void;
   updateAgentStatus: (agentId: string, status: 'online' | 'offline' | 'processing') => void;
 }
