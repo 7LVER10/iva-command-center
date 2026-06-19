@@ -61,6 +61,46 @@
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   }
 
+  /* Theme: Ocean */
+  [data-theme="ocean"] {
+    --bg-page: #0A0A14;
+    --bg-card: #101420;
+    --bg-card-hover: #141A28;
+    --bg-modal: #141C28;
+    --bg-modal-inner: #0E1420;
+    --bg-header: #0C1018;
+    --border-gold-dim: rgba(59, 130, 196, 0.15);
+    --border-gold-mid: rgba(59, 130, 196, 0.25);
+    --border-gold-act: rgba(90, 155, 216, 0.50);
+    --gold-bright: #7AB8E8;
+    --gold-primary: #5A9BD8;
+    --gold-dim: #3A7AB8;
+    --gold-muted: #4A7AA0;
+    --gold-label: #3A5A78;
+    --text-label: #4A7AA0;
+    --progress-relevance: #5A9BD8;
+  }
+
+  /* Theme: Forest */
+  [data-theme="forest"] {
+    --bg-page: #0A0F0A;
+    --bg-card: #101810;
+    --bg-card-hover: #142014;
+    --bg-modal: #142018;
+    --bg-modal-inner: #0E1810;
+    --bg-header: #0C140C;
+    --border-gold-dim: rgba(45, 138, 110, 0.15);
+    --border-gold-mid: rgba(45, 138, 110, 0.25);
+    --border-gold-act: rgba(72, 167, 138, 0.50);
+    --gold-bright: #60C8A0;
+    --gold-primary: #48A78A;
+    --gold-dim: #2D8A6E;
+    --gold-muted: #3A8A6A;
+    --gold-label: #2A6A50;
+    --text-label: #3A8A6A;
+    --progress-relevance: #48A78A;
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -2310,6 +2350,39 @@
   border: 1px solid var(--border-gold-dim);
   border-radius: var(--radius-sm);
   color: var(--gold-primary);
+}
+
+.iva-ai-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+}
+
+.iva-ai-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.iva-ai-detail-row:last-child {
+  border-bottom: none;
+}
+
+.iva-ai-detail-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.iva-ai-detail-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 /* ===== IVA CARD ACTIONS ===== */

@@ -32,7 +32,7 @@ export default function IvaStatsRow() {
           </div>
           <div className="iva-hero-content">
             <div className="iva-hero-value">{stats.avgRelevance}</div>
-            <div className="iva-hero-label">{t(locale, 'metricsRelevance').toUpperCase()}</div>
+            <div className="iva-hero-label">{t(locale, 'heroAvgRelevance')}</div>
           </div>
         </div>
 
@@ -42,7 +42,7 @@ export default function IvaStatsRow() {
           </div>
           <div className="iva-hero-content">
             <div className="iva-hero-value" style={{ color: 'var(--color-success)' }}>{stats.avgMargin}</div>
-            <div className="iva-hero-label">СР. МАРЖА</div>
+            <div className="iva-hero-label">{t(locale, 'heroAvgMargin')}</div>
           </div>
         </div>
       </div>
@@ -52,22 +52,22 @@ export default function IvaStatsRow() {
         <div className="iva-secondary-card">
           <BarChart3 size={16} className="iva-secondary-icon" />
           <div className="iva-secondary-value">{stats.total}</div>
-          <div className="iva-secondary-label">ВСЕГО</div>
+          <div className="iva-secondary-label">{t(locale, 'statTotal')}</div>
         </div>
         <div className="iva-secondary-card">
           <CheckCircle size={16} className="iva-secondary-icon" style={{ color: 'var(--color-success)' }} />
           <div className="iva-secondary-value">{stats.approved}</div>
-          <div className="iva-secondary-label">ОДОБРЕНО</div>
+          <div className="iva-secondary-label">{t(locale, 'statApproved')}</div>
         </div>
         <div className="iva-secondary-card">
           <Clock size={16} className="iva-secondary-icon" style={{ color: 'var(--color-warning)' }} />
           <div className="iva-secondary-value">{stats.deferred}</div>
-          <div className="iva-secondary-label">ОТЛОЖЕНО</div>
+          <div className="iva-secondary-label">{t(locale, 'statDeferred')}</div>
         </div>
         <div className="iva-secondary-card">
           <XCircle size={16} className="iva-secondary-icon" style={{ color: 'var(--color-danger)' }} />
           <div className="iva-secondary-value">{stats.rejected}</div>
-          <div className="iva-secondary-label">ОТКЛОНЕНО</div>
+          <div className="iva-secondary-label">{t(locale, 'statRejected')}</div>
         </div>
       </div>
     </div>

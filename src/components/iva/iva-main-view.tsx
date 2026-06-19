@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from 'react';
 import { useIvaStore } from '@/lib/iva/store';
+import { t } from '@/lib/iva/i18n';
 import IvaHeader from './iva-header';
 import IvaStatsRow from './iva-stats-row';
 import IvaProjectCard from './iva-project-card';
@@ -14,7 +15,7 @@ import { Search } from 'lucide-react';
 
 export default function IvaMainView() {
   const {
-    projects, projectsLoading, loadProjects,
+    locale, theme, projects, projectsLoading, loadProjects,
     searchQuery, setSearchQuery, selectedFilter, setSelectedFilter,
   } = useIvaStore();
 
@@ -50,15 +51,15 @@ export default function IvaMainView() {
   }), [projects]);
 
   const filters = [
-    { key: 'all', label: 'Все', count: filterCounts.all },
-    { key: 'active', label: 'Новые', count: filterCounts.active },
-    { key: 'completed', label: 'Одобрены', count: filterCounts.completed },
-    { key: 'pending', label: 'Отложены', count: filterCounts.pending },
-    { key: 'archived', label: 'Отклонены', count: filterCounts.archived },
+    { key: 'all', label: t(locale, 'filterAll'), count: filterCounts.all },
+    { key: 'active', label: t(locale, 'filterNew'), count: filterCounts.active },
+    { key: 'completed', label: t(locale, 'filterApproved'), count: filterCounts.completed },
+    { key: 'pending', label: t(locale, 'filterDeferred'), count: filterCounts.pending },
+    { key: 'archived', label: t(locale, 'filterRejected'), count: filterCounts.archived },
   ];
 
   return (
-    <div className="iva-main-layout">
+    <div className="iva-main-layout" data-theme={theme}>
       <IvaHeader />
 
       <main className="iva-main-content">
@@ -70,7 +71,7 @@ export default function IvaMainView() {
             <Search size={16} />
             <input
               type="text"
-              placeholder="Поиск проектов..."
+              placeholder={t(locale, 'searchProjects')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -92,11 +93,11 @@ export default function IvaMainView() {
         {projectsLoading ? (
           <div className="iva-loading">
             <div className="iva-loading-spinner" />
-            <span>Загрузка проектов...</span>
+            <span>{t(locale, 'loadingProjects')}</span>
           </div>
         ) : filteredProjects.length === 0 ? (
           <div className="iva-empty">
-            <span>Нет проектов по заданным критериям</span>
+            <span>{t(locale, 'noResults')}</span>
           </div>
         ) : (
           <div className="iva-cards-grid">

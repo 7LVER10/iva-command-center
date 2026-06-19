@@ -14,7 +14,7 @@ export default function IvaHeader() {
   ];
 
   const cycleTheme = () => {
-    const idx = themes.findIndex(t => t.id === theme);
+    const idx = themes.findIndex(th => th.id === theme);
     const next = themes[(idx + 1) % themes.length];
     setTheme(next.id);
   };
@@ -51,11 +51,11 @@ export default function IvaHeader() {
           </div>
         </div>
 
-        <button className="header-icon-btn" onClick={cycleTheme} title="Theme">
+        <button className="header-icon-btn" onClick={cycleTheme} title={t(locale, 'theme')}>
           <Palette size={18} />
         </button>
 
-        <button className="header-icon-btn" onClick={() => setShowConfigDrawer(true)} title="Config">
+        <button className="header-icon-btn" onClick={() => setShowConfigDrawer(true)} title={t(locale, 'config')}>
           <Settings size={18} />
         </button>
       </div>

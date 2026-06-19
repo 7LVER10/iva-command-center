@@ -1,22 +1,15 @@
 'use client';
 
 import { useIvaStore } from '@/lib/iva/store';
+import { t } from '@/lib/iva/i18n';
 import { X, Shield, Radio, Circle, CircleDot, FileText, Globe } from 'lucide-react';
 
-const methodologyParams = [
-  { icon: '♚', name: 'Профиль компании', pct: 30, desc: 'Совпадение основной деятельности компании с требованиями проекта (дизайн, архитектура, девелопмент, строительство, реконструкция).' },
-  { icon: '↗', name: 'Масштаб бюджета', pct: 25, desc: 'Соответствие объёма финансирования производственным мощностям и оборотному капиталу компании.' },
-  { icon: '⊙', name: 'Региональное присутствие', pct: 15, desc: 'Наличие лицензий, ресурсов и партнёров в регионе реализации проекта.' },
-  { icon: '⚒', name: 'Опыт в категории', pct: 20, desc: 'Количество реализованных проектов аналогичного типа и масштаба за последние 5 лет.' },
-  { icon: '◎', name: 'Стратегическая ценность', pct: 10, desc: 'Потенциал проекта для развития компании: вход в новый сегмент, усилении портфолио, долгосрочное партнёрство.' },
-];
-
 const agentAudit = [
-  { name: 'Агент сбора данных', status: 'COMPLETED', time: '2m ago', seconds: '847 сек', desc: 'Парсинг порталов, агрегаторов тендеров и государственных реестров. Извлечение ст...', icon: Radio },
-  { name: 'Агент-Классификатор', status: 'COMPLETED', time: '1m ago', seconds: '', desc: 'Оценка релевантности проекта по профилю компании. Работал с 5ナходками', icon: Circle },
-  { name: 'Агент-Стратег', status: 'COMPLETED', time: '', seconds: '847 сек', desc: 'Анализ рисков, маржинальных и конкурентных преимуществ.', icon: CircleDot },
-  { name: 'Агент-Генератор КП', status: 'STANDBY', time: '', seconds: '12 сек', desc: 'Подготовка коммерческих предложений, планов действий и документов для тендер...', icon: FileText },
-  { name: 'Агент-Переводчик', status: 'ACTIVE', time: 'now', seconds: '234 сек', desc: 'Глубокая локализация контента: перевод описаний, спецификаций и аналитических о...', icon: Globe },
+  { nameKey: 'agentDataCollector', status: 'COMPLETED', time: '2m ago', seconds: '847 sec', descKey: 'agentDataCollectorDesc', icon: Radio },
+  { nameKey: 'agentClassifier', status: 'COMPLETED', time: '1m ago', seconds: '', descKey: 'agentClassifierDesc', icon: Circle },
+  { nameKey: 'agentStrategist', status: 'COMPLETED', time: '', seconds: '847 sec', descKey: 'agentStrategistDesc', icon: CircleDot },
+  { nameKey: 'agentGenerator', status: 'STANDBY', time: '', seconds: '12 sec', descKey: 'agentGeneratorDesc', icon: FileText },
+  { nameKey: 'agentTranslator', status: 'ACTIVE', time: 'now', seconds: '234 sec', descKey: 'agentTranslatorDesc', icon: Globe },
 ];
 
 const statusColors: Record<string, string> = {
@@ -26,7 +19,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function IvaRelevanceModal() {
-  const { showRelevanceModal, setShowRelevanceModal } = useIvaStore();
+  const { locale, showRelevanceModal, setShowRelevanceModal } = useIvaStore();
 
   if (!showRelevanceModal) return null;
 
@@ -36,7 +29,7 @@ export default function IvaRelevanceModal() {
         <div className="iva-modal-header">
           <div className="iva-modal-title">
             <Shield size={20} />
-            <span>Аналитика релевантности</span>
+            <span>{t(locale, 'relevanceModalTitle')}</span>
           </div>
           <button className="iva-modal-close" onClick={() => setShowRelevanceModal(false)}>
             <X size={20} />
@@ -44,32 +37,54 @@ export default function IvaRelevanceModal() {
         </div>
 
         <div className="iva-modal-subtitle">
-          Методология оценки и профили клиентов
+          {t(locale, 'relevanceModalSubtitle')}
         </div>
 
         <div className="iva-modal-body">
           {/* Methodology */}
           <div className="iva-modal-section">
-            <h4 className="iva-modal-section-title">Методология</h4>
+            <h4 className="iva-modal-section-title">{t(locale, 'methodology')}</h4>
             <p className="iva-modal-section-desc">
-              Оценка релевантности строится на анализе 5 ключевых параметров: соответствие профилю компании, масштаб бюджета, региональное присутствие, опыт в категории и стратегическая ценность проекта.
+              {t(locale, 'methodologyDesc')}
             </p>
           </div>
 
           {/* Parameters */}
           <div className="iva-modal-section">
-            <h4 className="iva-modal-section-title">Параметры сравнения</h4>
+            <h4 className="iva-modal-section-title">{t(locale, 'paramsComparison')}</h4>
             <div className="iva-params-list">
-              {methodologyParams.map((param, i) => (
-                <div key={i} className="iva-param-item">
-                  <div className="iva-param-header">
-                    <span className="iva-param-icon">{param.icon}</span>
-                    <span className="iva-param-name">{param.name}</span>
-                    <span className="iva-param-pct">{param.pct}%</span>
-                  </div>
-                  <p className="iva-param-desc">{param.desc}</p>
+              <div className="iva-param-item">
+                <div className="iva-param-header">
+                  <span className="iva-param-icon">♚</span>
+                  <span className="iva-param-name">{t(locale, 'paramCompanyProfile')}</span>
+                  <span className="iva-param-pct">30%</span>
                 </div>
-              ))}
+                <p className="iva-param-desc">{t(locale, 'paramCompanyProfileDesc')}</p>
+              </div>
+              <div className="iva-param-item">
+                <div className="iva-param-header">
+                  <span className="iva-param-icon">↗</span>
+                  <span className="iva-param-name">{t(locale, 'paramBudgetScale')}</span>
+                  <span className="iva-param-pct">25%</span>
+                </div>
+                <p className="iva-param-desc">{t(locale, 'paramBudgetScaleDesc')}</p>
+              </div>
+              <div className="iva-param-item">
+                <div className="iva-param-header">
+                  <span className="iva-param-icon">⊙</span>
+                  <span className="iva-param-name">{t(locale, 'paramRegionalPresence')}</span>
+                  <span className="iva-param-pct">15%</span>
+                </div>
+                <p className="iva-param-desc">{t(locale, 'paramRegionalPresenceDesc')}</p>
+              </div>
+              <div className="iva-param-item">
+                <div className="iva-param-header">
+                  <span className="iva-param-icon">⚒</span>
+                  <span className="iva-param-name">{t(locale, 'paramCategoryExperience')}</span>
+                  <span className="iva-param-pct">20%</span>
+                </div>
+                <p className="iva-param-desc">{t(locale, 'paramCategoryExperienceDesc')}</p>
+              </div>
             </div>
           </div>
 
@@ -78,17 +93,17 @@ export default function IvaRelevanceModal() {
             <div className="iva-param-item">
               <div className="iva-param-header">
                 <span className="iva-param-icon">◎</span>
-                <span className="iva-param-name">Стратегическая ценность</span>
+                <span className="iva-param-name">{t(locale, 'paramStrategicValue')}</span>
                 <span className="iva-param-pct">10%</span>
               </div>
-              <p className="iva-param-desc">Потенциал проекта для развития компании: вход в новый сегмент, усилении портфолио, долгосрочное партнёрство.</p>
+              <p className="iva-param-desc">{t(locale, 'paramStrategicValueDesc')}</p>
             </div>
           </div>
 
           {/* AI Agent Audit */}
           <div className="iva-modal-section">
             <h4 className="iva-modal-section-title">
-              <span>⚡</span> Операционный аудит AI-агентов
+              <span>⚡</span> {t(locale, 'agentAuditTitle')}
             </h4>
             <div className="iva-agent-audit-list">
               {agentAudit.map((agent, i) => {
@@ -100,12 +115,12 @@ export default function IvaRelevanceModal() {
                     </div>
                     <div className="iva-agent-audit-info">
                       <div className="iva-agent-audit-top">
-                        <span className="iva-agent-audit-name">{agent.name}</span>
+                        <span className="iva-agent-audit-name">{t(locale, agent.nameKey)}</span>
                         <span className="iva-agent-audit-status" style={{ color: statusColors[agent.status] || '#8A8070' }}>
                           {agent.status}
                         </span>
                       </div>
-                      <div className="iva-agent-audit-desc">{agent.desc}</div>
+                      <div className="iva-agent-audit-desc">{t(locale, agent.descKey)}</div>
                     </div>
                     <div className="iva-agent-audit-time">
                       {agent.time && <div>{agent.time}</div>}
@@ -122,21 +137,21 @@ export default function IvaRelevanceModal() {
         <div className="iva-modal-footer-strip">
           <div className="iva-strip-item">
             <div className="iva-strip-value">2m ago</div>
-            <div className="iva-strip-label">ПОСЛЕДНИЙ АНАЛИЗ</div>
+            <div className="iva-strip-label">{t(locale, 'stripLastAnalysis')}</div>
           </div>
           <div className="iva-strip-item">
             <div className="iva-strip-value" style={{ color: 'var(--gold-primary)' }}>94.7%</div>
-            <div className="iva-strip-label">УРОВЕНЬ ДОСТОВЕРНОСТИ</div>
+            <div className="iva-strip-label">{t(locale, 'stripConfidence')}</div>
           </div>
           <div className="iva-strip-item">
             <div className="iva-strip-value">5</div>
-            <div className="iva-strip-label">ИСТОЧНИКИ ДАННЫХ</div>
+            <div className="iva-strip-label">{t(locale, 'stripDataSources')}</div>
           </div>
         </div>
 
         <div className="iva-modal-footer">
           <button className="iva-btn-close-modal" onClick={() => setShowRelevanceModal(false)}>
-            Закрыть
+            {t(locale, 'close')}
           </button>
         </div>
       </div>
