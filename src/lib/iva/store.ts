@@ -13,7 +13,6 @@ function loadPersistedState(): Partial<IvaState> {
     return {
       locale: parsed.locale,
       theme: parsed.theme,
-      sidebarCollapsed: parsed.sidebarCollapsed,
     };
   } catch {
     return {};
@@ -26,7 +25,6 @@ function persistState(state: IvaState) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       locale: state.locale,
       theme: state.theme,
-      sidebarCollapsed: state.sidebarCollapsed,
     }));
   } catch {}
 }
@@ -42,10 +40,10 @@ const initialAgents: Agent[] = defaultAgents.map((a) => ({
 }));
 
 export const useIvaStore = create<IvaState>((set, get) => ({
-  locale: loadPersistedState().locale || 'en',
+  locale: loadPersistedState().locale || 'ru',
   theme: loadPersistedState().theme || 'gold',
   navSection: 'search',
-  sidebarCollapsed: loadPersistedState().sidebarCollapsed ?? false,
+  sidebarCollapsed: false,
   searchQuery: '',
   countryFilter: 'all',
   nicheFilter: 'all',
@@ -61,6 +59,10 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   confirmDialogData: null,
   toasts: [],
   agents: initialAgents,
+  showConfigDrawer: false,
+  showRelevanceModal: false,
+  showMarginModal: false,
+  selectedFilter: 'all',
 
   setLocale: (locale) => {
     set({ locale });
@@ -71,18 +73,18 @@ export const useIvaStore = create<IvaState>((set, get) => ({
     setTimeout(() => persistState(get()), 0);
   },
   setNavSection: (section) => set({ navSection: section }),
-  toggleSidebar: () => {
-    set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed }));
-    setTimeout(() => persistState(get()), 0);
-  },
+  toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setCountryFilter: (country) => set({ countryFilter: country }),
   setNicheFilter: (niche) => set({ nicheFilter: niche }),
   setGroupFilter: (group) => set({ groupFilter: group }),
   setStatusFilter: (status) => set({ statusFilter: status }),
-
   setSelectedProject: (project) => set({ selectedProject: project }),
   setShowCreateModal: (show) => set({ showCreateModal: show }),
+  setShowConfigDrawer: (show) => set({ showConfigDrawer: show }),
+  setShowRelevanceModal: (show) => set({ showRelevanceModal: show }),
+  setShowMarginModal: (show) => set({ showMarginModal: show }),
+  setSelectedFilter: (filter) => set({ selectedFilter: filter }),
 
   showConfirmDialogFn: (data) => set({ showConfirmDialog: true, confirmDialogData: data }),
   hideConfirmDialog: () => set({ showConfirmDialog: false, confirmDialogData: null }),

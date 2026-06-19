@@ -1,5 +1,5 @@
-import AppLayout from '@/components/iva/app-layout';
+import IvaMainView from '@/components/iva/iva-main-view';
 
 export default function Home() {
-  return <AppLayout />;
+  return <IvaMainView />;
 }

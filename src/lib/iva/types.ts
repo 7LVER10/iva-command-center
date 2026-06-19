@@ -88,6 +88,10 @@ export interface IvaState {
   confirmDialogData: ConfirmDialogData | null;
   toasts: Toast[];
   agents: Agent[];
+  showConfigDrawer: boolean;
+  showRelevanceModal: boolean;
+  showMarginModal: boolean;
+  selectedFilter: string;
   setLocale: (locale: Locale) => void;
   setTheme: (theme: Theme) => void;
   setNavSection: (section: NavSection) => void;
@@ -99,6 +103,10 @@ export interface IvaState {
   setStatusFilter: (status: string) => void;
   setSelectedProject: (project: Project | null) => void;
   setShowCreateModal: (show: boolean) => void;
+  setShowConfigDrawer: (show: boolean) => void;
+  setShowRelevanceModal: (show: boolean) => void;
+  setShowMarginModal: (show: boolean) => void;
+  setSelectedFilter: (filter: string) => void;
   showConfirmDialogFn: (data: ConfirmDialogData) => void;
   hideConfirmDialog: () => void;
   addToast: (toast: Toast) => void;
