@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { IvaState, ProjectStatus, Project } from './types';
+import { IvaState, ProjectStatus, Agent } from './types';
+import { agents as defaultAgents } from './constants';
 
 const STORAGE_KEY = 'iva-state';
 
@@ -30,6 +31,16 @@ function persistState(state: IvaState) {
   } catch {}
 }
 
+const initialAgents: Agent[] = defaultAgents.map((a) => ({
+  ...a,
+  status: 'online' as const,
+  metrics: {
+    [a.metricsKey[0]]: Math.floor(Math.random() * 9000) + 1000,
+    [a.metricsKey[1]]: Math.floor(Math.random() * 95) + 5,
+    [a.metricsKey[2]]: Math.floor(Math.random() * 30) + 70,
+  },
+}));
+
 export const useIvaStore = create<IvaState>((set, get) => ({
   locale: loadPersistedState().locale || 'en',
   theme: loadPersistedState().theme || 'gold',
@@ -49,6 +60,7 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   showConfirmDialog: false,
   confirmDialogData: null,
   toasts: [],
+  agents: initialAgents,
 
   setLocale: (locale) => {
     set({ locale });
@@ -81,6 +93,14 @@ export const useIvaStore = create<IvaState>((set, get) => ({
     setTimeout(() => {
       set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }));
     }, toast.duration || 3000);
+  },
+
+  updateAgentStatus: (agentId, status) => {
+    set((s) => ({
+      agents: s.agents.map((a) =>
+        a.id === agentId ? { ...a, status } : a
+      ),
+    }));
   },
 
   loadProjects: async () => {
@@ -168,7 +188,7 @@ export const useIvaStore = create<IvaState>((set, get) => ({
     }
   },
 
-  exportProject: (project: Project) => {
+  exportProject: (project) => {
     const data = JSON.stringify(project, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);

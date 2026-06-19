@@ -5,13 +5,14 @@ import { t } from '@/lib/iva/i18n';
 import { NavSection } from '@/lib/iva/types';
 import {
   Search, FolderOpen, BarChart3, FileText, Settings,
-  PanelLeftClose, PanelLeftOpen, Hexagon, Plus
+  PanelLeftClose, PanelLeftOpen, Hexagon, Plus, Bot
 } from 'lucide-react';
 
 const navItems: { key: NavSection; icon: typeof Search }[] = [
   { key: 'search', icon: Search },
   { key: 'projects', icon: FolderOpen },
   { key: 'analytics', icon: BarChart3 },
+  { key: 'agents', icon: Bot },
   { key: 'reports', icon: FileText },
   { key: 'settings', icon: Settings },
 ];
@@ -20,6 +21,7 @@ const navKeyMap: Record<NavSection, string> = {
   search: 'navSearch',
   projects: 'navProjects',
   analytics: 'navAnalytics',
+  agents: 'navAgents',
   reports: 'navReports',
   settings: 'navSettings',
 };
@@ -55,7 +57,7 @@ export default function Sidebar() {
       {!sidebarCollapsed && (
         <button className="nav-item create-btn" onClick={() => setShowCreateModal(true)}>
           <Plus size={18} />
-          <span>New Project</span>
+          <span>{t(locale, 'newProject')}</span>
         </button>
       )}
 

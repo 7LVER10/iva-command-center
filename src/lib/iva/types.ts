@@ -3,7 +3,7 @@ export type Theme = 'gold' | 'ocean' | 'forest';
 export type Priority = 'high' | 'medium' | 'low';
 export type ProjectStatus = 'active' | 'pending' | 'completed' | 'archived';
 export type AnalysisStatus = 'idle' | 'loading' | 'success' | 'error';
-export type NavSection = 'search' | 'projects' | 'analytics' | 'reports' | 'settings';
+export type NavSection = 'search' | 'projects' | 'analytics' | 'reports' | 'settings' | 'agents';
 
 export interface Project {
   id: number;
@@ -58,6 +58,16 @@ export interface ConfirmDialogData {
   onConfirm: () => void;
 }
 
+export interface Agent {
+  id: string;
+  nameKey: string;
+  descriptionKey: string;
+  icon: string;
+  metricsKey: string[];
+  status?: 'online' | 'offline' | 'processing';
+  metrics?: Record<string, number>;
+}
+
 export interface IvaState {
   locale: Locale;
   theme: Theme;
@@ -77,6 +87,7 @@ export interface IvaState {
   showConfirmDialog: boolean;
   confirmDialogData: ConfirmDialogData | null;
   toasts: Toast[];
+  agents: Agent[];
   setLocale: (locale: Locale) => void;
   setTheme: (theme: Theme) => void;
   setNavSection: (section: NavSection) => void;
@@ -99,4 +110,5 @@ export interface IvaState {
   createProject: (data: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => Promise<boolean>;
   updateProject: (id: number, data: Partial<Project>) => Promise<void>;
   exportProject: (project: Project) => void;
+  updateAgentStatus: (agentId: string, status: 'online' | 'offline' | 'processing') => void;
 }

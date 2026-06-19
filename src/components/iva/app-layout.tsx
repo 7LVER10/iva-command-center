@@ -11,6 +11,7 @@ import EmptyState from './empty-state';
 import ResultCards from './result-cards';
 import ProjectsView from './projects-view';
 import AnalyticsView from './analytics-view';
+import AgentsView from './agents-view';
 import ReportsView from './reports-view';
 import SettingsView from './settings-view';
 import ToastContainer from './toast';
@@ -69,6 +70,12 @@ export default function AppLayout() {
         {navSection === 'analytics' && (
           <div className="content-area">
             <AnalyticsView />
+          </div>
+        )}
+
+        {navSection === 'agents' && (
+          <div className="content-area">
+            <AgentsView />
           </div>
         )}
 
