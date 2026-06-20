@@ -155,7 +155,7 @@ export const useIvaStore = create<IvaState>((set, get) => ({
 
       set({ analysisStatus: 'success', analysisResult: data, enrichedProjects: enriched });
 
-      addHistoryEntry({
+      await addHistoryEntry({
         geo: countryFilter,
         niche: nicheFilter,
         query: searchQuery,
@@ -166,7 +166,8 @@ export const useIvaStore = create<IvaState>((set, get) => ({
         top_project_id: enriched[0]?.id || 0,
       });
 
-      set({ analysisHistory: getHistory() });
+      const history = await getHistory();
+      set({ analysisHistory: history });
     } catch {
       set({ analysisStatus: 'error' });
     }
@@ -250,7 +251,8 @@ export const useIvaStore = create<IvaState>((set, get) => ({
     get().addToast({ type: 'success', message: 'Copied to clipboard' });
   },
 
-  loadHistory: () => {
-    set({ analysisHistory: getHistory() });
+  loadHistory: async () => {
+    const history = await getHistory();
+    set({ analysisHistory: history });
   },
 }));

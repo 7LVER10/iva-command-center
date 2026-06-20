@@ -1,34 +1,31 @@
 import { AnalysisHistoryEntry } from './vnext-types';
+import { createPersistenceAdapter, PersistenceAdapter } from './persistence';
 
-const HISTORY_KEY = 'iva-analysis-history';
-const MAX_HISTORY = 50;
+const historyAdapter: PersistenceAdapter<AnalysisHistoryEntry> = createPersistenceAdapter({
+  key: 'analysis-history',
+  maxItems: 100,
+  backend: 'localStorage', // swap to 'indexeddb' or 'api' for production
+});
 
-export function getHistory(): AnalysisHistoryEntry[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+export async function getHistory(): Promise<AnalysisHistoryEntry[]> {
+  return historyAdapter.load();
 }
 
-export function addHistoryEntry(entry: Omit<AnalysisHistoryEntry, 'id' | 'timestamp'>) {
-  if (typeof window === 'undefined') return;
-  const history = getHistory();
+export async function addHistoryEntry(entry: Omit<AnalysisHistoryEntry, 'id' | 'timestamp'>): Promise<void> {
   const newEntry: AnalysisHistoryEntry = {
     ...entry,
     id: `hist_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     timestamp: new Date().toISOString(),
   };
-  history.unshift(newEntry);
-  if (history.length > MAX_HISTORY) history.pop();
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  await historyAdapter.append(newEntry);
 }
 
-export function clearHistory() {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(HISTORY_KEY);
+export async function clearHistory(): Promise<void> {
+  await historyAdapter.clear();
+}
+
+export async function getHistoryCount(): Promise<number> {
+  return historyAdapter.count();
 }
 
 export function compareEntries(a: AnalysisHistoryEntry, b: AnalysisHistoryEntry) {
