@@ -1,4 +1,4 @@
-import { EnrichedProject, AnalysisHistoryEntry, ExportFormat } from './vnext-types';
+import type { EnrichedProject, AnalysisHistoryEntry, ExportFormat } from './vnext-types';
 
 export type Locale = 'en' | 'ru' | 'de' | 'tr';
 export type Theme = 'gold' | 'ocean' | 'forest';
