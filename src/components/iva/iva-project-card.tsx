@@ -160,6 +160,7 @@ export default function IvaProjectCard({ project, enriched }: IvaProjectCardProp
             <div className="iva-score-bar">
               <div className="iva-score-fill" style={{ width: `${scores.opportunity.value}%`, background: 'var(--progress-relevance)' }} />
             </div>
+
             <div className="iva-score-row">
               <span className="iva-score-label">{t(locale, 'risk')}</span>
               <span className="iva-score-value" style={{ color: 'var(--color-danger)' }}>{scores.risk.value}</span>
@@ -167,6 +168,7 @@ export default function IvaProjectCard({ project, enriched }: IvaProjectCardProp
             <div className="iva-score-bar">
               <div className="iva-score-fill" style={{ width: `${scores.risk.value}%`, background: 'var(--progress-risk)' }} />
             </div>
+
             <div className="iva-score-row">
               <span className="iva-score-label">{t(locale, 'margin')}</span>
               <span className="iva-score-value" style={{ color: 'var(--color-success)' }}>{scores.margin.value}</span>
@@ -174,6 +176,9 @@ export default function IvaProjectCard({ project, enriched }: IvaProjectCardProp
             <div className="iva-score-bar">
               <div className="iva-score-fill" style={{ width: `${scores.margin.value}%`, background: 'var(--progress-margin)' }} />
             </div>
+
+            {/* Score Explainability */}
+            <ScoreBreakdownBlock scores={scores} locale={locale} />
           </>
         ) : (
           <>
@@ -355,6 +360,85 @@ export default function IvaProjectCard({ project, enriched }: IvaProjectCardProp
           <XCircle size={14} /> {t(locale, 'btnReject')}
         </button>
       </div>
+    </div>
+  );
+}
+
+// ===== SCORE BREAKDOWN COMPONENT =====
+function ScoreBreakdownBlock({ scores, locale }: { scores: NonNullable<EnrichedProject['scores']>; locale: string }) {
+  const [open, setOpen] = useState(false);
+
+  const interpretation = (value: number, type: 'opportunity' | 'risk' | 'margin') => {
+    if (type === 'opportunity') {
+      if (value >= 75) return { text: locale === 'ru' ? 'Высокий потенциал' : 'High potential', color: 'var(--color-success)' };
+      if (value >= 50) return { text: locale === 'ru' ? 'Умеренный потенциал' : 'Moderate potential', color: 'var(--gold-primary)' };
+      return { text: locale === 'ru' ? 'Низкий потенциал' : 'Low potential', color: 'var(--color-warning)' };
+    }
+    if (type === 'risk') {
+      if (value >= 60) return { text: locale === 'ru' ? 'Высокий риск' : 'High risk', color: 'var(--color-danger)' };
+      if (value >= 35) return { text: locale === 'ru' ? 'Умеренный риск' : 'Moderate risk', color: 'var(--color-warning)' };
+      return { text: locale === 'ru' ? 'Низкий риск' : 'Low risk', color: 'var(--color-success)' };
+    }
+    if (value >= 70) return { text: locale === 'ru' ? 'Высокая маржа' : 'High margin', color: 'var(--color-success)' };
+    if (value >= 50) return { text: locale === 'ru' ? 'Хорошая маржа' : 'Good margin', color: 'var(--gold-primary)' };
+    return { text: locale === 'ru' ? 'Низкая маржа' : 'Low margin', color: 'var(--color-warning)' };
+  };
+
+  const renderScore = (label: string, score: typeof scores.opportunity, color: string, type: 'opportunity' | 'risk' | 'margin') => {
+    const interp = interpretation(score.value, type);
+    return (
+      <div className="iva-score-breakdown">
+        <div className="iva-score-breakdown-header">
+          <span className="iva-score-breakdown-label">{label}</span>
+          <span className="iva-score-breakdown-value" style={{ color }}>{score.value}/100</span>
+          <span className="iva-score-breakdown-interpretation" style={{ color: interp.color }}>{interp.text}</span>
+        </div>
+        <p className="iva-score-breakdown-methodology">{score.methodology}</p>
+        <div className="iva-score-breakdown-factors">
+          {score.factors.map((f, i) => (
+            <div key={i} className="iva-factor-row">
+              <span className="iva-factor-name">{f.name}</span>
+              <div className="iva-factor-bar-wrap">
+                <div className="iva-factor-bar" style={{ width: `${f.contribution}%`, background: color }} />
+              </div>
+              <span className="iva-factor-weight">{Math.round(f.weight * 100)}%</span>
+              <span className="iva-factor-contrib">+{f.contribution}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="iva-score-explainability">
+      <button className="iva-ai-toggle" onClick={() => setOpen(!open)}>
+        <Target size={14} />
+        <span>{locale === 'ru' ? 'Объяснение скоров' : 'Score Explanation'}</span>
+        {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+      </button>
+      {open && (
+        <div className="iva-score-breakdowns">
+          {renderScore(
+            locale === 'ru' ? 'Возможность' : 'Opportunity',
+            scores.opportunity,
+            'var(--gold-primary)',
+            'opportunity'
+          )}
+          {renderScore(
+            locale === 'ru' ? 'Риск' : 'Risk',
+            scores.risk,
+            'var(--color-danger)',
+            'risk'
+          )}
+          {renderScore(
+            locale === 'ru' ? 'Маржинальность' : 'Margin',
+            scores.margin,
+            'var(--color-success)',
+            'margin'
+          )}
+        </div>
+      )}
     </div>
   );
 }
