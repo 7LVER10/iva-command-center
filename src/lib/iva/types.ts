@@ -98,6 +98,7 @@ export interface IvaState {
   analysisHistory: AnalysisHistoryEntry[];
   competitorMode: boolean;
   selectedExportFormat: ExportFormat;
+  showHistory: boolean;
   setLocale: (locale: Locale) => void;
   setTheme: (theme: Theme) => void;
   setNavSection: (section: NavSection) => void;
@@ -115,6 +116,7 @@ export interface IvaState {
   setSelectedFilter: (filter: string) => void;
   setCompetitorMode: (mode: boolean) => void;
   setSelectedExportFormat: (format: ExportFormat) => void;
+  setShowHistory: (show: boolean) => void;
   showConfirmDialogFn: (data: ConfirmDialogData) => void;
   hideConfirmDialog: () => void;
   addToast: (toast: Toast) => void;

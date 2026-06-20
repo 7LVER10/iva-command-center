@@ -71,6 +71,7 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   analysisHistory: [],
   competitorMode: false,
   selectedExportFormat: 'brief' as ExportFormat,
+  showHistory: false,
 
   setLocale: (locale) => {
     set({ locale });
@@ -95,6 +96,7 @@ export const useIvaStore = create<IvaState>((set, get) => ({
   setSelectedFilter: (filter) => set({ selectedFilter: filter }),
   setCompetitorMode: (mode) => set({ competitorMode: mode }),
   setSelectedExportFormat: (format) => set({ selectedExportFormat: format }),
+  setShowHistory: (show) => set({ showHistory: show }),
 
   showConfirmDialogFn: (data) => set({ showConfirmDialog: true, confirmDialogData: data }),
   hideConfirmDialog: () => set({ showConfirmDialog: false, confirmDialogData: null }),

@@ -9,23 +9,26 @@ import IvaProjectCard from './iva-project-card';
 import IvaConfigDrawer from './iva-config-drawer';
 import IvaRelevanceModal from './iva-relevance-modal';
 import IvaMarginModal from './iva-margin-modal';
+import IvaHistoryPanel from './iva-history-panel';
 import ConfirmDialog from './confirm-dialog';
 import ToastContainer from './toast';
-import { Search } from 'lucide-react';
+import { Search, Clock } from 'lucide-react';
 
 export default function IvaMainView() {
   const {
     locale, theme, projects, projectsLoading, loadProjects,
     searchQuery, setSearchQuery, selectedFilter, setSelectedFilter,
+    enrichedProjects, analysisHistory, loadHistory,
+    showHistory, setShowHistory,
   } = useIvaStore();
 
   useEffect(() => {
     loadProjects();
-  }, [loadProjects]);
+    loadHistory();
+  }, [loadProjects, loadHistory]);
 
   const filteredProjects = useMemo(() => {
     let filtered = projects;
-
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(p =>
@@ -34,13 +37,16 @@ export default function IvaMainView() {
         p.niche.toLowerCase().includes(q)
       );
     }
-
     if (selectedFilter !== 'all') {
       filtered = filtered.filter(p => p.status === selectedFilter);
     }
-
     return filtered;
   }, [projects, searchQuery, selectedFilter]);
+
+  const enrichedMap = useMemo(() => {
+    const map = new Map(enrichedProjects.map(e => [e.id, e]));
+    return map;
+  }, [enrichedProjects]);
 
   const filterCounts = useMemo(() => ({
     all: projects.length,
@@ -61,11 +67,10 @@ export default function IvaMainView() {
   return (
     <div className="iva-main-layout" data-theme={theme}>
       <IvaHeader />
-
       <main className="iva-main-content">
         <IvaStatsRow />
 
-        {/* Search + Filters */}
+        {/* Search + Filters + History Toggle */}
         <div className="iva-filters-bar">
           <div className="iva-search-box">
             <Search size={16} />
@@ -87,7 +92,18 @@ export default function IvaMainView() {
               </button>
             ))}
           </div>
+          {analysisHistory.length > 0 && (
+            <button
+              className={`iva-history-toggle ${showHistory ? 'active' : ''}`}
+              onClick={() => setShowHistory(!showHistory)}
+            >
+              <Clock size={14} /> {t(locale, 'history')} ({analysisHistory.length})
+            </button>
+          )}
         </div>
+
+        {/* History Panel */}
+        {showHistory && <IvaHistoryPanel />}
 
         {/* Project Cards Grid */}
         {projectsLoading ? (
@@ -102,7 +118,11 @@ export default function IvaMainView() {
         ) : (
           <div className="iva-cards-grid">
             {filteredProjects.map((project) => (
-              <IvaProjectCard key={project.id} project={project} />
+              <IvaProjectCard
+                key={project.id}
+                project={project}
+                enriched={enrichedMap.get(project.id)}
+              />
             ))}
           </div>
         )}
