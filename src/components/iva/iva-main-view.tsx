@@ -65,7 +65,7 @@ export default function IvaMainView() {
   ];
 
   return (
-    <div className="iva-main-layout" data-theme={theme}>
+    <div className="iva-main-layout" data-theme={theme} suppressHydrationWarning>
       <IvaHeader />
       <main className="iva-main-content">
         <IvaStatsRow />
